@@ -17,7 +17,10 @@
     }
 
     // never block forever on a slow/broken connection
-    const timeout = new Promise((resolve) => setTimeout(resolve, 2000));
+    // (kept generous: on a first-ever visit the Cinzel font file has no
+    // cache to fall back on, so a short timeout can win the race before
+    // it's actually loaded and let the opening play with the wrong font)
+    const timeout = new Promise((resolve) => setTimeout(resolve, 4500));
 
     return Promise.race([task, timeout]);
   }
@@ -149,7 +152,8 @@
     if (e.animationName === "opening-out") startAmbient();
   });
   // belt-and-braces: if animationend is ever missed, don't leave the page without its background
-  setTimeout(startAmbient, 6000);
+  // (must clear the worst case: 4.5s font-wait timeout + the opening's own 4.1s timeline)
+  setTimeout(startAmbient, 9500);
 
   function skipOpening() {
     document.documentElement.classList.add("ready");
