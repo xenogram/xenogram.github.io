@@ -26,15 +26,22 @@
     document.documentElement.classList.add("ready");
   });
 
-  /* ---------------- starfield background ---------------- */
+  /* ---------------- starfield background ----------------
+     the canvas loop and the CSS aurora blobs are both real GPU/CPU cost.
+     they stay fully off (no rAF ticking, no CSS animation running) until
+     the opening has actually finished, so they never compete with it for
+     the main thread on slow phones. */
   const canvas = document.getElementById("bg-canvas");
   const ctx = canvas.getContext("2d");
+  const isLite = window.matchMedia("(max-width: 640px), (pointer: coarse)").matches;
   let stars = [];
   let shootingStar = null;
   let w, h, dpr;
+  let rafId = null;
+  let ambientStarted = false;
 
   function resize() {
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    dpr = Math.min(window.devicePixelRatio || 1, isLite ? 1.5 : 2);
     w = window.innerWidth;
     h = window.innerHeight;
     canvas.width = w * dpr;
@@ -48,7 +55,8 @@
   const STAR_COLORS = ["#dfeeff", "#dfeeff", "#dfeeff", "#bcd9ff", "#f3d9d9"];
 
   function initStars() {
-    const count = Math.min(160, Math.floor((w * h) / 8000));
+    const cap = isLite ? 70 : 160;
+    const count = Math.min(cap, Math.floor((w * h) / 8000));
     stars = Array.from({ length: count }, () => ({
       x: Math.random() * w,
       y: Math.random() * h,
@@ -62,7 +70,7 @@
   }
 
   function maybeSpawnShootingStar() {
-    if (shootingStar || Math.random() > 0.004) return;
+    if (isLite || shootingStar || Math.random() > 0.004) return;
     const startX = Math.random() * w * 0.6 + w * 0.1;
     shootingStar = {
       x: startX,
@@ -107,15 +115,41 @@
       if (ss.life <= 0 || ss.x > w + 40 || ss.y > h + 40) shootingStar = null;
     }
 
-    requestAnimationFrame(draw);
+    rafId = requestAnimationFrame(draw);
   }
 
-  window.addEventListener("resize", resize, { passive: true });
-  resize();
-  requestAnimationFrame(draw);
+  function startCanvasLoop() {
+    if (rafId !== null) return;
+    resize();
+    rafId = requestAnimationFrame(draw);
+  }
+  function stopCanvasLoop() {
+    if (rafId === null) return;
+    cancelAnimationFrame(rafId);
+    rafId = null;
+  }
+
+  function startAmbient() {
+    if (ambientStarted) return;
+    ambientStarted = true;
+    document.documentElement.classList.add("opening-done");
+    startCanvasLoop();
+  }
+
+  window.addEventListener("resize", () => { if (rafId !== null) resize(); }, { passive: true });
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) stopCanvasLoop();
+    else if (ambientStarted) startCanvasLoop();
+  });
 
   /* ---------------- opening (click / key still lets you skip, no visible button) ---------------- */
   const opening = document.getElementById("opening");
+
+  opening.addEventListener("animationend", (e) => {
+    if (e.animationName === "opening-out") startAmbient();
+  });
+  // belt-and-braces: if animationend is ever missed, don't leave the page without its background
+  setTimeout(startAmbient, 6000);
 
   function skipOpening() {
     document.documentElement.classList.add("ready");
