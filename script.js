@@ -1,6 +1,48 @@
 (() => {
   "use strict";
 
+  /* ---------------- hold the opening until fonts/avatar/page are actually ready ---------------- */
+  function whenAssetsReady() {
+    const tasks = [];
+
+    if (document.fonts && document.fonts.load) {
+      tasks.push(
+        Promise.all([
+          document.fonts.load('600 76px Cinzel'),
+          document.fonts.load('700 32px Cinzel'),
+        ])
+          .then(() => document.fonts.ready)
+          .catch(() => {})
+      );
+    }
+
+    const avatar = document.querySelector(".avatar");
+    if (avatar) {
+      tasks.push(
+        new Promise((resolve) => {
+          if (avatar.complete) resolve();
+          else {
+            avatar.addEventListener("load", resolve, { once: true });
+            avatar.addEventListener("error", resolve, { once: true });
+          }
+        })
+      );
+    }
+
+    if (document.readyState !== "complete") {
+      tasks.push(new Promise((resolve) => window.addEventListener("load", resolve, { once: true })));
+    }
+
+    // never block forever on a slow/broken connection
+    const timeout = new Promise((resolve) => setTimeout(resolve, 4000));
+
+    return Promise.race([Promise.all(tasks), timeout]);
+  }
+
+  whenAssetsReady().then(() => {
+    document.documentElement.classList.add("ready");
+  });
+
   /* ---------------- starfield background ---------------- */
   const canvas = document.getElementById("bg-canvas");
   const ctx = canvas.getContext("2d");
@@ -93,6 +135,7 @@
   const opening = document.getElementById("opening");
 
   function skipOpening() {
+    document.documentElement.classList.add("ready");
     opening.classList.add("skip");
   }
   opening.addEventListener("click", skipOpening);
