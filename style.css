@@ -106,7 +106,7 @@ body{
 }
 
 .opening-svg{
-  width:min(84vw, 560px);
+  width:clamp(300px, 88vw, 560px);
   height:auto;
   overflow:visible;
 }
@@ -119,10 +119,12 @@ body{
 }
 .ol-stroke{
   fill:none;
-  stroke:rgba(217,232,255,.85);
-  stroke-width:1;
+  stroke:#eaf3ff;
+  stroke-width:2.4;
+  vector-effect:non-scaling-stroke;
   stroke-dasharray:1800;
   stroke-dashoffset:1800;
+  filter:drop-shadow(0 0 6px rgba(191,224,255,.65));
   animation:
     draw-line 1.9s cubic-bezier(.4,.05,.2,1) forwards .3s,
     stroke-out .6s ease forwards 2.1s;
