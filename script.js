@@ -1,42 +1,25 @@
 (() => {
   "use strict";
 
-  /* ---------------- hold the opening until fonts/avatar/page are actually ready ---------------- */
+  /* ---------------- hold the opening only on the font it actually needs ----------------
+     the avatar photo and rest of the page load independently and must never block this;
+     only the SVG logo glyph shapes depend on the font being ready. */
   function whenAssetsReady() {
-    const tasks = [];
+    let task = Promise.resolve();
 
     if (document.fonts && document.fonts.load) {
-      tasks.push(
-        Promise.all([
-          document.fonts.load('600 76px Cinzel'),
-          document.fonts.load('700 32px Cinzel'),
-        ])
-          .then(() => document.fonts.ready)
-          .catch(() => {})
-      );
-    }
-
-    const avatar = document.querySelector(".avatar");
-    if (avatar) {
-      tasks.push(
-        new Promise((resolve) => {
-          if (avatar.complete) resolve();
-          else {
-            avatar.addEventListener("load", resolve, { once: true });
-            avatar.addEventListener("error", resolve, { once: true });
-          }
-        })
-      );
-    }
-
-    if (document.readyState !== "complete") {
-      tasks.push(new Promise((resolve) => window.addEventListener("load", resolve, { once: true })));
+      task = Promise.all([
+        document.fonts.load('600 76px Cinzel'),
+        document.fonts.load('700 32px Cinzel'),
+      ])
+        .then(() => document.fonts.ready)
+        .catch(() => {});
     }
 
     // never block forever on a slow/broken connection
-    const timeout = new Promise((resolve) => setTimeout(resolve, 4000));
+    const timeout = new Promise((resolve) => setTimeout(resolve, 2000));
 
-    return Promise.race([Promise.all(tasks), timeout]);
+    return Promise.race([task, timeout]);
   }
 
   whenAssetsReady().then(() => {
