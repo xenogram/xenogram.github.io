@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>XENOGRAM</title>
+<meta name="description" content="XENOGRAM の各種リンク">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Sans+JP:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<canvas id="bg-canvas" aria-hidden="true"></canvas>
+<div class="aurora aurora--1" aria-hidden="true"></div>
+<div class="aurora aurora--2" aria-hidden="true"></div>
+<div class="aurora aurora--3" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+
+<!-- ===== Opening ===== -->
+<section id="opening" aria-hidden="true">
+  <svg class="opening-svg" viewBox="0 0 640 140" preserveAspectRatio="xMidYMid meet" role="img" aria-label="XENOGRAM">
+    <defs>
+      <linearGradient id="logoGrad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#f3f8ff"/>
+        <stop offset="48%" stop-color="#9cc9f5"/>
+        <stop offset="100%" stop-color="#3562ad"/>
+      </linearGradient>
+    </defs>
+    <text class="ol-stroke" x="320" y="96" text-anchor="middle">XENOGRAM</text>
+    <text class="ol-fill" x="320" y="96" text-anchor="middle">XENOGRAM</text>
+  </svg>
+</section>
+
+<!-- ===== Main ===== -->
+<main id="content">
+  <div class="card">
+    <div class="avatar-ring" id="avatar-trigger" title="">
+      <img class="avatar" src="01.png" alt="XENOGRAM">
+    </div>
+
+    <h2 class="name">XENOGRAM</h2>
+    <p class="role">Vocaloid Producer</p>
+
+    <nav class="links">
+      <a class="link-btn" href="https://x.com/Jxeno_8" target="_blank" rel="noopener noreferrer">
+        <span class="link-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </span>
+        <span class="link-label">X</span>
+        <span class="link-arrow" aria-hidden="true">→</span>
+      </a>
+
+      <a class="link-btn" href="https://www.nicovideo.jp/user/143305795" target="_blank" rel="noopener noreferrer">
+        <span class="link-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M.4787 7.534v12.1279A2.0213 2.0213 0 0 0 2.5 21.6832h2.3888l1.323 2.0948a.4778.4778 0 0 0 .4043.2205.4778.4778 0 0 0 .441-.2205l1.323-2.0948h6.9828l1.323 2.0948a.4778.4778 0 0 0 .441.2205c.1838 0 .3308-.0735.4043-.2205l1.323-2.0948h2.6462a2.0213 2.0213 0 0 0 2.0213-2.0213V7.5339a2.0213 2.0213 0 0 0-2.0213-1.9845h-7.681l4.4468-4.4469L17.1637 0l-5.1452 5.1452L6.8 0 5.6973 1.1025l4.4102 4.4102H2.5367a2.0213 2.0213 0 0 0-2.058 2.058z"/></svg>
+        </span>
+        <span class="link-label">ニコニコ動画</span>
+        <span class="link-arrow" aria-hidden="true">→</span>
+      </a>
+
+      <a class="link-btn" href="mailto:xenogram8@gmail.com">
+        <span class="link-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M3 5.5h18v13H3z"/><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M3.5 6l8.5 7 8.5-7"/></svg>
+        </span>
+        <span class="link-label">Mail</span>
+        <span class="link-arrow" aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </div>
+
+  <footer class="site-footer">© 2026 XENOGRAM All rights reserved.</footer>
+</main>
+
+<!-- ===== Owner-only access counter panel ===== -->
+<div id="owner-panel" hidden>
+  <button id="owner-close" type="button" aria-label="close">×</button>
+  <p class="owner-title">Total Access</p>
+  <p class="owner-count" id="owner-count">–</p>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
